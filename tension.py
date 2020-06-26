@@ -63,6 +63,11 @@ class MeshTensionVertexMap(om.MPxNode):
         output_array.set(output)
         result_handle.setClean()
 
+        outputs_plug = om.MPlug(mplug.node(), MeshTensionVertexMap.outputs)
+        for index, value in enumerate(output):
+            plug = outputs_plug.child(index)
+            plug.setFloat(value)
+
 
 def node_initializer():
     numeric_fn = om.MFnNumericAttribute()
