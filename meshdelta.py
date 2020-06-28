@@ -45,6 +45,9 @@ class MeshDelta(ompx.MPxDeformerNode):
             return
         offset_mesh_it = om.MItMeshVertex(offset_mesh)
 
+        if offset_mesh_it.count() != reference_mesh_it.count():
+            return
+
         while not geom_it.isDone():
             position = geom_it.position()
             weight = self.weightValue(mdatablock, geo_idx, geom_it.index())
