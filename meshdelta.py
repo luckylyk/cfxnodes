@@ -1,3 +1,20 @@
+# This is a maya deformer node prototype
+# The purpose is to create a deformer able to compute the delta between two
+# geometries and apply it in the deformed one.
+# The usage is for animation/vfx pipeline based on geometries cached date
+# (whatever the format). If animation is updated and the difference has to be
+# applied on further geometry stages. For example a cloth cache. It helps to
+# avoid to redo the simulation and all the tweaks.
+# Node setup example for cloth update:
+#                        _____________
+# old animation-\       | meshDelta   |
+#                \      |-------------|
+#                 \--> *|referenceMesh|
+#                 /--> *|offsetMesh   |
+#                /      |       output|*-------> cloth sim mesh cached with
+# new animation-/       |_____________|          the old animation.
+
+
 import maya.OpenMaya as om
 import maya.OpenMayaMPx as ompx
 import sys
@@ -5,10 +22,13 @@ import sys
 
 PLUGINNAME = 'meshDelta'
 PLUGIN_NODENAME = 'meshDelta'
+# this plugin id is put randomly and not safe.
+# if it does create an plugin id clash in your pipe, just change it
 PLUGIN_ID = om.MTypeId(0x002126)
 
 
 class MeshDelta(ompx.MPxDeformerNode):
+
     def deform(self, mdatablock, geom_it, local_to_world, geo_idx):
         handle = ompx.cvar.MPxGeometryFilter_envelope
         envelope = mdatablock.inputValue(handle).asFloat()
