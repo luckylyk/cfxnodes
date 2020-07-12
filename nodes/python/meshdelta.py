@@ -20,7 +20,7 @@ import maya.OpenMayaMPx as ompx
 import sys
 
 
-PLUGINNAME = 'meshDelta'
+PLUGINNAME = 'lbMeshDelta'
 PLUGIN_NODENAME = 'meshDelta'
 # this plugin id is put randomly and not safe.
 # if it does create an plugin id clash in your pipe, just change it
