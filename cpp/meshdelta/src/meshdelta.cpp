@@ -28,8 +28,6 @@
 #include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
 #include <maya/MString.h>
-#include <iostream>
-#include <string>
 
 
 class MeshDelta : public MPxDeformerNode {
@@ -73,13 +71,15 @@ MStatus MeshDelta::deform(
     if (refMeshIt.count() != offMeshIt.count()) {
         return MS::kSuccess;}
 
+    // deform
     for ( ; !vertIter.isDone(); vertIter.next()) {
         MPoint position(vertIter.position());
         MPoint refPosition(refMeshIt.position());
         MPoint offPosition(offMeshIt.position());
         float weight(weightValue(dataBlock, multiIndex, vertIter.index()));
         if (refPosition.x != offPosition.x) {
-            MPoint result(position - ((refPosition - offPosition) * env) * weight);
+            MPoint result;
+            result = position - ((refPosition - offPosition) * env) * weight;
             vertIter.setPosition(result);}
         refMeshIt.next();
         offMeshIt.next();}
@@ -118,7 +118,7 @@ MStatus initializePlugin(MObject object){
     // macro which check if the status is well MS::kSucces
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MGlobal::displayInfo("meshDelta loaded");
-    return MS::kSuccess;
+    return status;
 }
 
 
@@ -129,6 +129,6 @@ MStatus uninitializePlugin(MObject object){
     // macro which check if the status is well MS::kSucces
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MGlobal::displayInfo("meshDelta unloaded");
-    return MS::kSuccess;
+    return status;
 }
 
