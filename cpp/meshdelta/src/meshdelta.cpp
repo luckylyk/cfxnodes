@@ -79,7 +79,7 @@ MStatus MeshDelta::deform(
         float weight(weightValue(dataBlock, multiIndex, vertIter.index()));
         if (refPosition.x != offPosition.x) {
             MPoint result;
-            result = position - ((refPosition - offPosition) * env) * weight;
+            result = position - (((refPosition - offPosition) * env) * weight);
             vertIter.setPosition(result);}
         refMeshIt.next();
         offMeshIt.next();}
