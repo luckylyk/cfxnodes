@@ -1,3 +1,7 @@
+// The pooth node is a combinason of a push deformer and a post smooth deformation
+// Push + Smooth = Pooth ;)
+
+
 #include <vector>
 #include <string>
 #include <algorithm>
