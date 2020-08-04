@@ -57,7 +57,7 @@ MStatus MeshDelta::deform(
         const MMatrix& matrix,
         UINT multiIndex){
 
-    float env(dataBlock.inputValue(envelope).asFloat());
+    float env(1 - dataBlock.inputValue(envelope).asFloat());
     MObject refMesh(dataBlock.inputValue(referenceMesh).asMesh());
     MObject offMesh(dataBlock.inputValue(offsetMesh).asMesh());
 
