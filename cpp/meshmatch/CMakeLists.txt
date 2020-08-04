@@ -23,7 +23,10 @@ set(PROJECT_NAME meshmatch)
 
 # set SOURCE_FILES
 set(SOURCE_FILES
-"src/meshmatch.cpp")
+"src/meshmatch.cpp"
+"src/meshmatchnode.cpp"
+"src/meshmatchcommand.cpp"
+"src/meshmatch.h")
 
 # set linking libraries
 set(
