@@ -2,7 +2,6 @@
 #include <vector>
 #include <utility>
 #include <string>
-#include "meshmatch.h"
 
 #include <maya/MGlobal.h>
 #include <maya/MFnNumericAttribute.h>
@@ -19,34 +18,14 @@
 #include <maya/MFnMesh.h>
 #include <maya/MPointArray.h>
 
+#include "deformers.h"
+#include "commands.h"
+#include "functions.h"
+
 using namespace std;
 
 
-pair<unsigned int, double> getClosestVertexIndexAndDistance(
-        MPoint const& refPoint,
-        MObject& mesh) {
-
-    double distanceBuffer;
-    MPoint closestPoint;
-    int closestVertexIndex(0);
-    MFnMesh fnMesh(mesh);
-    MItMeshVertex vertIt(mesh);
-    double closestDistance(numeric_limits<double>::max());
-
-    fnMesh.getClosestPoint(refPoint, closestPoint, MSpace::Space::kWorld);
-    unsigned int i;
-    for (; !vertIt.isDone(); vertIt.next()) {
-        i = vertIt.index();
-        MPoint currentPoint(vertIt.position(MSpace::Space::kWorld));
-        distanceBuffer = currentPoint.distanceTo(closestPoint);
-        if (distanceBuffer < closestDistance) {
-            closestDistance = distanceBuffer;
-            closestVertexIndex = i;}}
-    pair<unsigned int, double> result(closestVertexIndex, closestDistance);
-    return result;
-}
-
-
+MString MeshMatch::name("meshMatch");
 MTypeId MeshMatch::id(0x05425d);
 MObject MeshMatch::aMeshes;
 MObject MeshMatch::aMatchesGeoIndex;

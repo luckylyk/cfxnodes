@@ -18,12 +18,23 @@ cmake_minimum_required(VERSION 2.8)
 include($ENV{DEVKIT_LOCATION}/cmake/pluginEntry.cmake)
 
 # specify project name
-set(PROJECT_NAME pooth)
+set(PROJECT_NAME cnc)
 
 
 # set SOURCE_FILES
 set(SOURCE_FILES
-src/pooth.cpp)
+     src/commands.h
+     src/deformers.h
+     src/functions.h
+     src/geoUtils.cpp
+     src/magnet.cpp
+     src/main.cpp
+     src/meshdelta.cpp
+     src/meshmatchcommand.cpp
+     src/meshmatchnode.cpp
+     src/pooth.cpp
+     src/values.cpp
+)
 
 # set linking libraries
 set(

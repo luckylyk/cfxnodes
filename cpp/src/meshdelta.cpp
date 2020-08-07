@@ -25,24 +25,13 @@
 #include <maya/MObject.h>
 #include <maya/MFnData.h>
 #include <maya/MPoint.h>
-#include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
 #include <maya/MString.h>
 
-
-class MeshDelta : public MPxDeformerNode {
-    public:
-        MeshDelta();
-        ~MeshDelta() override;
-        static void* creator();
-        static MStatus initialize();
-        MStatus deform(MDataBlock& dataBlock, MItGeometry& vertIter, const MMatrix& matrix, UINT multiIndex) override;
-        static MTypeId id;
-        static MObject referenceMesh;
-        static MObject offsetMesh;
-};
+#include "deformers.h"
 
 
+MString MeshDelta::name("meshDelta");
 MTypeId MeshDelta::id(0x00035d);
 MObject MeshDelta::referenceMesh;
 MObject MeshDelta::offsetMesh;
@@ -102,33 +91,6 @@ MStatus MeshDelta::initialize(){
     addAttribute(offsetMesh);
     attributeAffects(offsetMesh, outputGeom);
 
-    return status;
-}
-
-
-MStatus initializePlugin(MObject object){
-    MStatus status;
-    MFnPlugin fnPlugin(object, "lbMD", "0.0", "Any");
-    status = fnPlugin.registerNode(
-        "meshDelta",
-        MeshDelta::id,
-        MeshDelta::creator,
-        MeshDelta::initialize,
-        MPxDeformerNode::kDeformerNode);
-    // macro which check if the status is well MS::kSucces
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MGlobal::displayInfo("meshDelta loaded");
-    return status;
-}
-
-
-MStatus uninitializePlugin(MObject object){
-    MStatus status;
-    MFnPlugin fnPlugin(object);
-    status = fnPlugin.deregisterNode(MeshDelta::id);
-    // macro which check if the status is well MS::kSucces
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MGlobal::displayInfo("meshDelta unloaded");
     return status;
 }
 

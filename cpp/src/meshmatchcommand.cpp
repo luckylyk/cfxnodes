@@ -1,11 +1,12 @@
 
-#include "meshmatch.h"
+#include "commands.h"
 
 #include <maya/MGlobal.h>
 #include <maya/MObject.h>
 #include <maya/MPlugArray.h>
 #include <maya/MDGModifier.h>
 #include <maya/MSyntax.h>
+#include <maya/MPlug.h>
 #include <maya/MSelectionList.h>
 #include <maya/MDagPath.h>
 #include <maya/MArgList.h>
@@ -16,6 +17,7 @@ MeshMatchCommand::MeshMatchCommand() {}
 MeshMatchCommand::~MeshMatchCommand() {}
 void* MeshMatchCommand::creator() {return new MeshMatchCommand();}
 
+MString MeshMatchCommand::name("meshMatch");
 
 void checkArgsSanity(
         const MArgList & argList,
