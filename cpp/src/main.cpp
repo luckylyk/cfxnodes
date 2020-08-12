@@ -40,6 +40,14 @@ MStatus initializePlugin(MObject object){
         MPxDeformerNode::kDeformerNode);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    status = fnPlugin.registerNode(
+        PushOut::name,
+        PushOut::id,
+        PushOut::creator,
+        PushOut::initialize,
+        MPxDeformerNode::kDeformerNode);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     status = fnPlugin.registerCommand(
         MeshMatchCommand::name,
         MeshMatchCommand::creator,
@@ -50,10 +58,11 @@ MStatus initializePlugin(MObject object){
         "Cfx Node Collection loaded:\n"
         "\t Node registered:\n"
         "\t\tdeformers:\n"
-        "\t\t\t-pooth\n"
         "\t\t\t-magnet\n"
         "\t\t\t-meshDelta\n"
         "\t\t\t-meshMatch\n"
+        "\t\t\t-pooth\n"
+        "\t\t\t-pushOut\n"
         "\t Command registered:\n"
         "\t\t\t-meshMatch\n");
     return status;
@@ -63,9 +72,8 @@ MStatus initializePlugin(MObject object){
 MStatus uninitializePlugin(MObject object){
     MStatus status;
     MFnPlugin fnPlugin(object);
-    status = fnPlugin.deregisterNode(Pooth::id);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    // register nodes
     status = fnPlugin.deregisterNode(Magnet::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -75,6 +83,13 @@ MStatus uninitializePlugin(MObject object){
     status = fnPlugin.deregisterNode(MeshMatch::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    status = fnPlugin.deregisterNode(Pooth::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    status = fnPlugin.deregisterNode(PushOut::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    //register command
     status = fnPlugin.deregisterCommand(MeshMatch::name);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -82,10 +97,11 @@ MStatus uninitializePlugin(MObject object){
         "Cfx Node Collection unloaded:\n"
         "\t Node unregistered:\n"
         "\t\tdeformers:\n"
-        "\t\t\t-pooth\n"
         "\t\t\t-magnet\n"
         "\t\t\t-meshDelta\n"
         "\t\t\t-meshMatch\n"
+        "\t\t\t-pooth\n"
+        "\t\t\t-pushOut\n"
         "\t Command unregistered:\n"
         "\t\t\t-meshMatch\n");
     return status;

@@ -203,7 +203,6 @@ MStatus Magnet::deform(
         blendedClosestPoint = blendedClosestPoint / neightbourOfVertices[index].size();
         MPoint position(vertIter.position());
 
-        w = weightValue(dataBlock, multiIndex, index);
         fnMagMesh.getClosestPointAndNormal(blendedClosestPoint, closestPoint, closestNormal, MSpace::kWorld);
         distance = position.distanceTo(closestPoint);
         angle = (normal.angle(closestNormal) / M_PI);

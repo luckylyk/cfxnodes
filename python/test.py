@@ -25,3 +25,22 @@ cmds.select(cube)
 deformer = cmds.deformer(type="meshDelta")[0]
 cmds.connectAttr(cube2[:-1] + 'Shape2.outMesh', deformer + '.referenceMesh')
 cmds.connectAttr(cube3[:-1] + 'Shape3.outMesh', deformer + '.offsetMesh')
+
+
+# test meshmatch
+cmds.file(new=True, f=True)
+cmds.loadPlugin(r"D:\Works\Python\GitHub\cfxnodes\cpp\meshmatch\build\Debug\meshmatch.mll")
+sphere = cmds.polySphere()[0]
+sphere1 = cmds.polySphere()[0]
+sphere2 = cmds.polySphere()[0]
+cmds.move(1, 0, 0, sphere1)
+cmds.move(1, 0, 0, sphere2)
+
+defo = cmds.deformer(sphere, type='meshMatch')[0]
+cmds.connectAttr('pSphereShape2.outMesh', defo + '.meshes[0]')
+cmds.connectAttr('pSphereShape3.outMesh', defo + '.meshes[1]')
+
+
+cmds.listAttr("meshMatch1")
+cmds.getAttr("meshMatch1.mgi")
+cmds.getAttr("meshMatch1.mvi")

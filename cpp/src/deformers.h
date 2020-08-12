@@ -78,4 +78,21 @@ class Pooth : public MPxDeformerNode {
         int backedStepValue;
 };
 
+
+class PushOut: public MPxDeformerNode {
+    public:
+        PushOut();
+        virtual ~PushOut();
+        static void* creator();
+        static MStatus initialize();
+        virtual MStatus deform(MDataBlock& dataBlock, MItGeometry& vertIter, const MMatrix& matrix, UINT multiIndex);
+        static MString name;
+        static MTypeId id;
+        static MObject aPusher;
+        static MObject aPush;
+        static MObject aRadiusOffset;
+        static MObject aDistanceMax;
+};
+
+
 #endif

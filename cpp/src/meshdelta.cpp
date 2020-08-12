@@ -60,6 +60,9 @@ MStatus MeshDelta::deform(
     if (refMeshIt.count() != offMeshIt.count()) {
         return MS::kSuccess;}
 
+    if (env == 0.0) {
+        return MS::kSuccess;}
+
     // deform
     for ( ; !vertIter.isDone(); vertIter.next()) {
         MPoint position(vertIter.position());

@@ -1,0 +1,20 @@
+
+unifiy in one plugins
+
+deformers:
+   - magnet done
+   - pooth (push and smooth) done
+   - pushout done
+   - mesh delta done
+   - mesh match to debug
+   - self collision push todo
+
+misc:
+   - float lod driver (python prototype done)
+   - decompose array todo
+   - vertice set distance todo
+
+map
+   - tension (python prototype done - have to do in cpp)
+   - distance (todo)
+   - torsion (todo)

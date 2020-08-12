@@ -79,8 +79,13 @@ MStatus Pooth::deform(
     vertIt.reset();
     for (; !vertIt.isDone(); vertIt.next()) {
         index = vertIt.index();
-        w = weightValue(dataBlock, multiIndex, index);
         MPoint finalPoint = meshPoints[index];
+
+        w = weightValue(dataBlock, multiIndex, index);
+        if (w == 0) {
+            deformedPoints[index] = finalPoint;
+            continue;}
+
         MPoint averagePoint;
         for (int i(0); i < neightbourOfVertices[index].size(); ++i) {
             averagePoint.x += (meshPoints[neightbourOfVertices[index][i]].x / neightbourOfVertices[index].size());

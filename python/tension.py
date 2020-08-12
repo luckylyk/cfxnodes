@@ -61,6 +61,7 @@ class MeshTensionVertexMap(om.MPxNode):
         result_handle = mdatablock.outputValue(MeshTensionVertexMap.output)
         output_array = om.MFnDoubleArrayData(result_handle.data())
         output_array.set(output)
+        print 'meshvertmap computed'
         result_handle.setClean()
 
         outputs_plug = om.MPlug(mplug.node(), MeshTensionVertexMap.outputs)

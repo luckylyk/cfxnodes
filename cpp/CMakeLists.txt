@@ -33,6 +33,7 @@ set(SOURCE_FILES
      src/meshmatchcommand.cpp
      src/meshmatchnode.cpp
      src/pooth.cpp
+     src/pushout.cpp
      src/values.cpp
 )
 
