@@ -23,15 +23,12 @@ set(PROJECT_NAME cnc)
 
 # set SOURCE_FILES
 set(SOURCE_FILES
-     src/commands.h
      src/deformers.h
      src/functions.h
      src/geoUtils.cpp
      src/magnet.cpp
      src/main.cpp
      src/meshdelta.cpp
-     src/meshmatchcommand.cpp
-     src/meshmatchnode.cpp
      src/pooth.cpp
      src/pushout.cpp
      src/values.cpp

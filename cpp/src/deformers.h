@@ -43,23 +43,6 @@ class MeshDelta : public MPxDeformerNode {
 };
 
 
-class MeshMatch : public MPxDeformerNode {
-    public:
-        MeshMatch();
-        virtual ~MeshMatch();
-        static void* creator();
-        static MStatus initialize();
-        virtual MStatus deform(MDataBlock& dataBlock, MItGeometry& vertIter, const MMatrix& matrix, UINT multiIndex);
-        void buildMatches(MDataBlock& dataBlock, MObject& inputMesh);
-        static MString name;
-        static MTypeId id;
-        static MObject aMeshes;
-        static MObject aMatchesGeoIndex;
-        static MObject aMatchesVertexId;
-        static MObject hasToRebuiltMatches;
-};
-
-
 class Pooth : public MPxDeformerNode {
     public:
         Pooth();
@@ -88,10 +71,14 @@ class PushOut: public MPxDeformerNode {
         virtual MStatus deform(MDataBlock& dataBlock, MItGeometry& vertIter, const MMatrix& matrix, UINT multiIndex);
         static MString name;
         static MTypeId id;
+        static MObject interpolation;
         static MObject aPusher;
         static MObject aPush;
         static MObject aRadiusOffset;
         static MObject aDistanceMax;
+
+        std::vector<std::vector<int>> neightbourOfVertices;
+        int backedInterpolation;
 };
 
 

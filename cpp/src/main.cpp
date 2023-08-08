@@ -2,7 +2,6 @@
 #include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
 #include "deformers.h"
-#include "commands.h"
 
 
 MStatus initializePlugin(MObject object){
@@ -33,25 +32,11 @@ MStatus initializePlugin(MObject object){
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     status = fnPlugin.registerNode(
-        MeshMatch::name,
-        MeshMatch::id,
-        MeshMatch::creator,
-        MeshMatch::initialize,
-        MPxDeformerNode::kDeformerNode);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    status = fnPlugin.registerNode(
         PushOut::name,
         PushOut::id,
         PushOut::creator,
         PushOut::initialize,
         MPxDeformerNode::kDeformerNode);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    status = fnPlugin.registerCommand(
-        MeshMatchCommand::name,
-        MeshMatchCommand::creator,
-        MeshMatchCommand::createSyntax);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MGlobal::displayInfo(
@@ -60,11 +45,8 @@ MStatus initializePlugin(MObject object){
         "\t\tdeformers:\n"
         "\t\t\t-magnet\n"
         "\t\t\t-meshDelta\n"
-        "\t\t\t-meshMatch\n"
         "\t\t\t-pooth\n"
-        "\t\t\t-pushOut\n"
-        "\t Command registered:\n"
-        "\t\t\t-meshMatch\n");
+        "\t\t\t-pushOut\n");
     return status;
 }
 
@@ -80,17 +62,10 @@ MStatus uninitializePlugin(MObject object){
     status = fnPlugin.deregisterNode(MeshDelta::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    status = fnPlugin.deregisterNode(MeshMatch::id);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
     status = fnPlugin.deregisterNode(Pooth::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     status = fnPlugin.deregisterNode(PushOut::id);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    //register command
-    status = fnPlugin.deregisterCommand(MeshMatch::name);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MGlobal::displayInfo(
@@ -99,7 +74,6 @@ MStatus uninitializePlugin(MObject object){
         "\t\tdeformers:\n"
         "\t\t\t-magnet\n"
         "\t\t\t-meshDelta\n"
-        "\t\t\t-meshMatch\n"
         "\t\t\t-pooth\n"
         "\t\t\t-pushOut\n"
         "\t Command unregistered:\n"

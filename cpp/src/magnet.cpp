@@ -157,9 +157,7 @@ MStatus Magnet::deform(
     MFnMesh fnMagMesh(magMesh);
     MPoint closestPoint;
     MVector closestNormal;
-    double distance;
-    double w;
-    double angle;
+    double distance, w, angle;
 
     //inputmesh
     MArrayDataHandle hInputMesh = dataBlock.outputArrayValue(input, &status);
@@ -172,10 +170,9 @@ MStatus Magnet::deform(
     if (magMesh.isNull() == true) {
         return MS::kSuccess;}
 
-    MFloatVectorArray normals(vertIter.count());
-    fnMesh.getNormals(normals);
-    MFloatVectorArray closestNormals(vertIter.count());
+    MFloatVectorArray normals(vertIter.count()), closestNormals(vertIter.count());
     MPointArray closestPoints(vertIter.count());
+    fnMesh.getNormals(normals);
 
     if (neightbourOfVertices.empty() || (vInterpolation != backedInterpolation)){
         backedInterpolation = vInterpolation;
@@ -185,7 +182,7 @@ MStatus Magnet::deform(
     // store datas
     for ( ; !vertIter.isDone(); vertIter.next()) {
         UINT index(vertIter.index());
-        MPoint position(vertIter.position());
+        MPoint position(vertIter.position(MSpace::kWorld));
         fnMagMesh.getClosestPoint(position, closestPoint, MSpace::kWorld);
         closestPoints[index] = closestPoint;}
 

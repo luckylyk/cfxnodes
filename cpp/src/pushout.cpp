@@ -1,8 +1,6 @@
 
 #include <cmath>
 
-#include "deformers.h"
-
 #include <maya/MPxDeformerNode.h>
 #include <maya/MFnTypedAttribute.h>
 #include <maya/MFnNumericAttribute.h>
@@ -13,10 +11,17 @@
 #include <maya/MItGeometry.h>
 #include <maya/MArrayDataHandle.h>
 #include <maya/MVector.h>
+#include <maya/MGlobal.h>
+#include <maya/MPointArray.h>
+#include <maya/MItMeshVertex.h>
+
+#include "deformers.h"
+#include "functions.h"
 
 
 MString PushOut::name("pushOut");
 MTypeId PushOut::id(0x05426e);
+MObject PushOut::interpolation;
 MObject PushOut::aPusher;
 MObject PushOut::aPush;
 MObject PushOut::aRadiusOffset;
@@ -29,6 +34,18 @@ MStatus PushOut::initialize() {
     MStatus status;
     MFnNumericAttribute fnNumAttr;
     MFnTypedAttribute fnTypedAttr;
+
+    interpolation = fnNumAttr.create(
+        "interpolation",
+        "i",
+        MFnNumericData::kInt,
+        1.0,
+        &status);
+    fnNumAttr.setMin(1);
+    fnNumAttr.setMax(10);
+    fnNumAttr.setKeyable(true);
+    addAttribute(interpolation);
+    attributeAffects(interpolation, outputGeom);
 
     aPusher = fnTypedAttr.create("pusher", "p", MFnData::kMesh, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -70,6 +87,7 @@ MStatus PushOut::deform(
     float env(dataBlock.inputValue(envelope).asFloat());
     MObject oPusher(dataBlock.inputValue(aPusher).asMesh());
     float push(dataBlock.inputValue(aPush).asFloat());
+    int vInterpolation(dataBlock.inputValue(interpolation).asInt());
     float radiusOffset(dataBlock.inputValue(aRadiusOffset).asFloat());
     float distanceMax(dataBlock.inputValue(aDistanceMax).asFloat());
 
@@ -81,26 +99,53 @@ MStatus PushOut::deform(
     MObject inputMesh(hInputElement.child(inputGeom).asMesh());
 
     MFnMesh fnMeshInput(inputMesh), fnMeshPusher(oPusher);
-    MPoint position, closestPoint, distanceReference, deformedPoint;
-    MVector closestNormal, median, behindCheck;
+    MItMeshVertex iterInputVertices(inputMesh);
+    MPoint position, closestPoint, distanceReference, deformedPoint, blendedClosestPoint;
+    MVector closestNormal, median, behindCheck, vectMult;
     double distance, angle, mult, w;
-    MFloatVectorArray normals;
-    fnMeshInput.getNormals(normals);
     UINT index;
+    int dummy;
+
+    if (oPusher.isNull()) {
+        return MS::kSuccess;}
+
+    if (neightbourOfVertices.empty() || (vInterpolation != backedInterpolation)){
+        backedInterpolation = vInterpolation;
+        neightbourOfVertices = computeNeighborhoodOfVertices(inputMesh, vInterpolation);
+        MGlobal::displayInfo("Neighborhood computed");}
+
+    MFloatVectorArray normals(vertIter.count());
+    fnMeshInput.getNormals(normals);
+    MFloatVectorArray closestNormals(vertIter.count());
+    MPointArray closestPoints(vertIter.count());
+
+    // store datas
+    for ( ; !vertIter.isDone(); vertIter.next()) {
+        index = vertIter.index();
+        MPoint position(vertIter.position(MSpace::kWorld));
+        fnMeshPusher.getClosestPoint(position, closestPoint, MSpace::kWorld);
+        closestPoints[index] = closestPoint;}
+
+    vertIter.reset();
     for (; !vertIter.isDone(); vertIter.next()) {
         index = vertIter.index();
         w = weightValue(dataBlock, multiIndex, index);
         if (w == 0) {
             continue;}
 
+        for (int i(0); i < neightbourOfVertices[index].size(); ++i) {
+            iterInputVertices.setIndex(neightbourOfVertices[index][i], dummy);
+            blendedClosestPoint += closestPoints[neightbourOfVertices[index][i]];}
+        blendedClosestPoint = blendedClosestPoint / neightbourOfVertices[index].size();
+
         position = vertIter.position(MSpace::kWorld);
-        MVector vectMult(normals[index] * radiusOffset);
-        distanceReference = vertIter.position() - vectMult;
-        fnMeshPusher.getClosestPointAndNormal(position, closestPoint, closestNormal, MSpace::kWorld);
+        vectMult = normals[index] * radiusOffset;
+        distanceReference = vertIter.position(MSpace::kWorld) - vectMult;
+        fnMeshPusher.getClosestPointAndNormal(blendedClosestPoint, closestPoint, closestNormal, MSpace::kWorld);
 
         angle = closestNormal.angle(normals[index]);
         distance = position.distanceTo(closestPoint);
-        if (angle > (M_PI / 4) || distance > distanceMax) {
+        if (angle > (M_PI / 4) || distance > distanceMax) { //(angle > (M_PI / 4) || distance > distanceMax) {
             continue;}
 
         median = (closestNormal + normals[index]) / 2;
@@ -118,6 +163,6 @@ MStatus PushOut::deform(
         deformedPoint.y = (position.y * (1 - mult)) + (deformedPoint.y * mult);
         deformedPoint.z = (position.z * (1 - mult)) + (deformedPoint.z * mult);
         vertIter.setPosition(deformedPoint);
-    }
+    };
     return MS::kSuccess;
 }
